@@ -16,19 +16,15 @@ app.get('/api/universities', (req, res) => {
   })
 })
 
-app.get('/api/get-unis', async (req, res) => {
+app.post('/api/get-unis', async (req, res) => {
   try {
     console.log('Starting refetch process...');
     await osvitaParser();
     console.log('Refetch completed successfully');
 
-    // Reload the updated data
-    const updatedUniversities = await import('../data/parsing_results.json', { assert: { type: 'json' } });
-
     res.json({
       success: true,
       message: 'Universities data refreshed successfully',
-      universities: updatedUniversities.default
     });
   } catch (error) {
     console.error('Error during refetch:', error);

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   createColumnHelper,
   flexRender,
@@ -171,6 +171,10 @@ const AdmissionTable: React.FC<{
 export const AdmissionTables: React.FC = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['admission-data'],
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
     queryFn: async () => {
       const response = await fetch('/api/universities')
       const data = await response.json()
@@ -204,15 +208,55 @@ export const AdmissionTables: React.FC = () => {
     },
   })
 
+  const updateMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch('/api/get-unis', {
+        method: 'POST',
+      })
+      if (!response.ok) {
+        throw new Error('Failed to update data')
+      }
+      return response.json()
+    },
+    onSuccess: () => {
+      // Reload the page on success
+      window.location.reload()
+    },
+    onError: (error) => {
+      console.error('Update failed:', error)
+      alert('Failed to update data. Please try again.')
+    }
+  })
+
+  const handleUpdate = () => {
+    updateMutation.mutate()
+  }
+
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-base-content">
-        Вступні бали 2025
-      </h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-base-content">
+          Вступні бали 2025
+        </h1>
+        <button
+          onClick={handleUpdate}
+          disabled={updateMutation.isPending}
+          className="btn btn-primary"
+        >
+          {updateMutation.isPending ? (
+            <>
+              <span className="loading loading-spinner loading-sm"></span>
+              Оновлення...
+            </>
+          ) : (
+            'Оновити дані'
+          )}
+        </button>
+      </div>
 
       <div className="">
         {data?.universities.map((program, index) => (
