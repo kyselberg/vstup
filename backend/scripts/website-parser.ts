@@ -4,6 +4,7 @@ import puppeteer, { Browser, Page } from 'puppeteer';
 import { findParentDir } from '../utils/paths.js';
 
 export interface WebsiteConfig {
+  id: string;
   name: string;
   url: string;
   action?: (page: Page) => Promise<void>;
@@ -16,6 +17,7 @@ export interface WebsiteConfig {
 }
 
 export interface ParsingResult {
+  id: string;
   website: string;
   url: string;
   timestamp: Date;
@@ -61,6 +63,7 @@ export class WebsiteParser {
     }
 
     const result: ParsingResult = {
+      id: config.id,
       website: config.name,
       url: config.url,
       timestamp: new Date(),
@@ -141,6 +144,7 @@ export class WebsiteParser {
       } catch (error) {
         console.error(`Failed to parse ${config.name}:`, error);
         results.push({
+          id: config.id,
           website: config.name,
           url: config.url,
           timestamp: new Date(),
@@ -193,36 +197,6 @@ export class WebsiteParser {
     return JSON.parse(content);
   }
 }
-
-// Example website configurations using single callbacks
-export const exampleConfigs: WebsiteConfig[] = [
-  {
-    name: 'Example News Site',
-    url: 'https://example.com',
-    action: async (page: Page) => {
-      await page.evaluate(() => {
-        const button = document.querySelector('.detail-link');
-        if (button instanceof HTMLElement) {
-          button.click();
-        }
-      });
-    },
-    callback: async (page: Page) => {
-      return {
-        title: await page.$eval('h1', el => el.textContent?.trim() || ''),
-        articles: await page.$$eval('.article', articles =>
-          articles.map(article => article.textContent?.trim() || '').slice(0, 5)
-        ),
-        links: await page.$$eval('a', links =>
-          links.map(link => link.getAttribute('href') || '').slice(0, 10)
-        )
-      };
-    },
-    waitForSelector: '.content',
-    takeScreenshot: true,
-    screenshotPath: 'screenshots/example_news.png'
-  }
-];
 
 export async function createParser(options?: any): Promise<WebsiteParser> {
   const parser = new WebsiteParser(options);

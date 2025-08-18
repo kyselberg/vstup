@@ -1,12 +1,8 @@
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable
-} from '@tanstack/react-table'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import React from 'react'
-import { useUniversities } from '../hooks/useUniversities'
-import { Countdown } from './Countdown'
+import { Countdown } from '../components/Countdown'
+import { useUniversity } from '../hooks/useUniversity'
 
 const highlightMe = (name: string) => {
   return name === 'Кисельов І. О.';
@@ -75,50 +71,27 @@ const columns = [
   }),
 ]
 
-// Navigation Menu Component
-const NavigationMenu: React.FC<{ programs: Array<{ id: string; title: string; subtitle: string }> }> = ({ programs }) => {
-  const scrollToTable = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  return (
-    <div className="top-0 z-50 bg-base-100 shadow-lg border-b-2 border-base-300 mb-6">
-      <div className="container mx-auto px-4 py-4">
-        <h2 className="text-lg font-semibold mb-3 text-center">Навігація по програмах</h2>
-        <div className="flex flex-wrap gap-2 justify-center">
-                    {programs.map((program) => (
-            <button
-              key={program.id}
-              onClick={() => scrollToTable(program.id)}
-              className="btn btn-sm btn-outline hover:btn-primary transition-colors"
-            >
-              {program.title}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const AdmissionTable: React.FC<{
-  id: string;
+const IndividualAdmissionTable: React.FC<{
   title: string;
   subtitle: string;
   amounts: { totalPlaces: string; contractPlaces: string; budgetPlaces: string };
   tableData: AdmissionData[];
-}> = ({ id, title, subtitle, amounts, tableData }) => {
+}> = ({ title, subtitle, amounts, tableData }) => {
   const table = useReactTable({
-    data: tableData,
+    data: tableData
+      .filter(row => row.state !== '')
+      .sort((a, b) => {
+        // Sort budget applicants first, then contract applicants
+        if (a.type === 'Б' && b.type === 'К') return -1;
+        if (a.type === 'К' && b.type === 'Б') return 1;
+        return 0;
+      }),
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
 
   return (
-    <div id={id} className="card bg-base-100 shadow-xl border-2 border-base-300 scroll-mt-20">
+    <div className="card bg-base-100 shadow-xl border-2 border-base-300">
       <div className="card-body p-4">
         <h3 className="card-title font-bold text-center mb-2">{title}</h3>
         <p className="text-sm text-base-content/70 mb-3">{subtitle}</p>
@@ -191,45 +164,53 @@ const AdmissionTable: React.FC<{
   )
 }
 
-export const AdmissionTables: React.FC = () => {
-  const { data, isLoading, error } = useUniversities();
+export const Route = createFileRoute('/universities/$id')({
+  component: RouteComponent,
+})
 
+function RouteComponent() {
+  const { id } = Route.useParams();
+
+  const { university, isLoading, error } = useUniversity(id)
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
-  // Create navigation data
-  const navigationPrograms = data?.map((program, index) => ({
-    id: `program-${index}`,
-    title: program.data.programName,
-    subtitle: program.data.university
-  })) || [];
+  if (!university) {
+    return (
+      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-error mb-4">Таблицю не знайдено</h1>
+          <Link to="/" className="btn btn-primary">Повернутися на головну</Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-base-content">
-          Вступні бали 2025
-        </h1>
-      </div>
+    <div className="min-h-screen bg-base-200">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <Link to="/" className="btn btn-outline btn-sm mb-4">
+            ← Повернутися на головну
+          </Link>
+          <h1 className="text-3xl font-bold text-base-content">
+            {university.data.programName}
+          </h1>
+          <p className="text-lg text-base-content/70 mt-2">
+            {university.data.university}
+          </p>
+        </div>
 
-      <div className="mb-8">
-        <Countdown />
-      </div>
+        <div className="mb-8">
+          <Countdown />
+        </div>
 
-      {/* Navigation Menu */}
-      <NavigationMenu programs={navigationPrograms} />
-
-      <div className="">
-        {data?.map((program) => (
-          <AdmissionTable
-            key={program.id}
-            id={program.id}
-            title={program.data.programName}
-            subtitle={program.data.university}
-            amounts={program.data.amounts}
-            tableData={program.data.table}
-          />
-        ))}
+        <IndividualAdmissionTable
+          title={university.data.programName}
+          subtitle={university.data.university}
+          amounts={university.data.amounts}
+          tableData={university.data.table}
+        />
       </div>
     </div>
   )
