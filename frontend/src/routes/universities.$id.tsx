@@ -193,9 +193,35 @@ function RouteComponent() {
           <Link to="/" className="btn btn-outline btn-sm mb-4">
             ← Повернутися на головну
           </Link>
-          <h1 className="text-3xl font-bold text-base-content">
-            {university.data.programName}
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold text-base-content">
+              {university.data.programName}
+            </h1>
+            {university.url && (
+              <a
+                href={university.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-circle btn-sm btn-outline"
+                title="Відкрити оригінальну сторінку"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+              </a>
+            )}
+          </div>
           <p className="text-lg text-base-content/70 mt-2">
             {university.data.university}
           </p>
