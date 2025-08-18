@@ -1,36 +1,62 @@
 import { useCountdown } from "../hooks/useCountdown";
 import { END_DATE } from "../utils/constants";
-import { formatHours, formatMinutes, formatSeconds } from "../utils/date";
 
 export const Countdown = () => {
   const { days, hours, minutes, seconds } = useCountdown(END_DATE);
-  const result = [];
-
-  if (days > 0) {
-    result.push(`${days} днів`);
-  }
-
-  result.push(`${formatHours(hours)}:${formatMinutes(minutes)}:${formatSeconds(seconds)}`);
-
-  const time = result.join(', ');
 
   // Calculate remaining time in milliseconds to determine status
   const remainingTime = days * 24 * 60 * 60 * 1000 + hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000;
 
-  return (
-    <div className="flex items-center space-x-4 bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
-      <div className="flex-shrink-0">
-        <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
+  if (remainingTime <= 0) {
+    return (
+      <div className="flex justify-center items-center min-h-[200px]">
+        <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+          <div className="text-2xl font-bold text-red-600">Час подачі завершено</div>
+        </div>
       </div>
-      <div>
-        <div className="text-sm font-medium text-gray-500">Дедлайн подачі</div>
-        {remainingTime > 0 ? (
-          <div className="text-xl font-bold text-gray-900">{time}</div>
-        ) : (
-          <div className="text-xl font-bold text-red-600">Час подачі завершено</div>
-        )}
+    );
+  }
+
+  return (
+    <div className="flex justify-center items-center min-h-[200px]">
+      <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+        <div className="text-center">
+          <div className="text-xl font-semibold text-gray-700 mb-6">Дедлайн подачі</div>
+          <div className="grid grid-flow-col gap-8 text-center auto-cols-max">
+            <div className="flex flex-col items-center">
+              <span className="countdown font-mono text-6xl text-blue-600">
+                <span style={{"--value": days} as React.CSSProperties} aria-live="polite" aria-label={`${days} днів`}>
+                  {days}
+                </span>
+              </span>
+              <span className="text-sm font-medium text-gray-600 mt-2">днів</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="countdown font-mono text-6xl text-green-600">
+                <span style={{"--value": hours} as React.CSSProperties} aria-live="polite" aria-label={`${hours} годин`}>
+                  {hours}
+                </span>
+              </span>
+              <span className="text-sm font-medium text-gray-600 mt-2">годин</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="countdown font-mono text-6xl text-orange-600">
+                <span style={{"--value": minutes} as React.CSSProperties} aria-live="polite" aria-label={`${minutes} хвилин`}>
+                  {minutes}
+                </span>
+              </span>
+              <span className="text-sm font-medium text-gray-600 mt-2">хв</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="countdown font-mono text-6xl text-red-600">
+                <span style={{"--value": seconds} as React.CSSProperties} aria-live="polite" aria-label={`${seconds} секунд`}>
+                  {seconds}
+                </span>
+              </span>
+              <span className="text-sm font-medium text-gray-600 mt-2">сек</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

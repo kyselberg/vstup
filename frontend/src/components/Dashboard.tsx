@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import React from 'react'
+import React, { useState } from 'react'
 import { useUniversities } from '../hooks/useUniversities'
 import { useUpdateData } from '../hooks/useUpdateData'
 import { Countdown } from './Countdown'
@@ -180,9 +180,11 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
 export const Dashboard: React.FC = () => {
   const {data, isLoading, error} = useUniversities()
   const updateMutation = useUpdateData();
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const handleUpdate = () => {
-    updateMutation.mutate()
+    setShowUpdateModal(true);
+    updateMutation.mutate();
   }
 
   if (isLoading) return <div>Loading...</div>
@@ -199,7 +201,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
+      <div className="">
         <h1 className="text-3xl font-bold text-base-content text-center mb-4">
           Моя панель вступу 2025
         </h1>
@@ -260,6 +262,24 @@ export const Dashboard: React.FC = () => {
             )}
           </button>
         </div>
+
+        {/* Update Modal */}
+        {showUpdateModal && (
+          <div className="modal modal-open">
+            <div className="modal-box text-center">
+              <div className="mb-6">
+                <span className="loading loading-spinner loading-lg text-primary"></span>
+              </div>
+              <h3 className="font-bold text-lg mb-4">Оновлення даних</h3>
+              <p className="text-base-content/70 mb-2">
+                Оновлення триває до хвилини.
+              </p>
+              <p className="text-base-content/70">
+                Сторінка оновиться автоматично, коли дані будуть готові.
+              </p>
+            </div>
+          </div>
+        )}
     </div>
   )
 }
