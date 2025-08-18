@@ -6,7 +6,10 @@
   "main": "index.js",
   "scripts": {
     "parse": "tsx scripts/index.ts",
-    "start": "tsx src/main.ts"
+    "start": "tsx src/main.ts",
+    "build": "tsc --outDir dist",
+    "serve": "node dist/main.js",
+    "refetch": "node dist/scripts/index.js"
   },
   "keywords": [],
   "author": "",
