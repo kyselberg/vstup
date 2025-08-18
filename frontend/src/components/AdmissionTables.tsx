@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-table'
 import React from 'react'
 import z from 'zod'
+import { Countdown } from './Countdown'
 
 const highlightMe = (name: string) => {
   return name === 'Кисельов І. О.';
@@ -85,7 +86,7 @@ const NavigationMenu: React.FC<{ programs: Array<{ id: string; title: string; su
   };
 
   return (
-    <div className="sticky top-0 z-50 bg-base-100 shadow-lg border-b-2 border-base-300 mb-6">
+    <div className="top-0 z-50 bg-base-100 shadow-lg border-b-2 border-base-300 mb-6">
       <div className="container mx-auto px-4 py-4">
         <h2 className="text-lg font-semibold mb-3 text-center">Навігація по програмах</h2>
         <div className="flex flex-wrap gap-2 justify-center">
@@ -292,6 +293,10 @@ export const AdmissionTables: React.FC = () => {
             'Оновити дані'
           )}
         </button>
+      </div>
+
+      <div className="mb-8">
+        <Countdown />
       </div>
 
       {/* Navigation Menu */}
