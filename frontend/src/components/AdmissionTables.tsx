@@ -262,7 +262,7 @@ export const AdmissionTables: React.FC = () => {
         {data?.universities.map((program, index) => (
           <AdmissionTable
             key={index}
-            title={program.data.speciality}
+            title={program.data.programName}
             subtitle={program.data.university}
             amounts={program.data.amounts}
             tableData={program.data.table}
