@@ -238,19 +238,9 @@ export const Dashboard: React.FC = () => {
         ))}
       </div>
 
-              {/* View All Tables Button */}
-        <div className="text-center">
-          <a
-            href="/tables"
-            className="btn btn-primary btn-lg"
-          >
-            Переглянути всі таблиці
-          </a>
-        </div>
-
         {/* Quick Stats */}
         <div className="text-center text-sm text-base-content/70 mt-4">
-          <p>Натисніть на картку програми або кнопку вище для детального перегляду</p>
+          <p>Натисніть на картку програми для детального перегляду</p>
         </div>
 
         {/* Refresh Data Button */}
