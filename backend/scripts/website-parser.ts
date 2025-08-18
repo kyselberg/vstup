@@ -30,7 +30,7 @@ export class WebsiteParser {
 
   constructor(
     private options: any = {
-      headless: 'new',
+      headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     }
   ) {}
