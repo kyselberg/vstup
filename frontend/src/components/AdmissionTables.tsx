@@ -75,12 +75,42 @@ const columns = [
   }),
 ]
 
+// Navigation Menu Component
+const NavigationMenu: React.FC<{ programs: Array<{ id: string; title: string; subtitle: string }> }> = ({ programs }) => {
+  const scrollToTable = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  return (
+    <div className="sticky top-0 z-50 bg-base-100 shadow-lg border-b-2 border-base-300 mb-6">
+      <div className="container mx-auto px-4 py-4">
+        <h2 className="text-lg font-semibold mb-3 text-center">Навігація по програмах</h2>
+        <div className="flex flex-wrap gap-2 justify-center">
+          {programs.map((program) => (
+            <button
+              key={program.id}
+              onClick={() => scrollToTable(program.id)}
+              className="btn btn-sm btn-outline hover:btn-primary transition-colors"
+            >
+              {program.title}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const AdmissionTable: React.FC<{
+  id: string;
   title: string;
   subtitle: string;
   amounts: { totalPlaces: string; contractPlaces: string; budgetPlaces: string };
   tableData: AdmissionData[];
-}> = ({ title, subtitle, amounts, tableData }) => {
+}> = ({ id, title, subtitle, amounts, tableData }) => {
   const table = useReactTable({
     data: tableData
       .filter(row => row.state !== '')
@@ -95,7 +125,7 @@ const AdmissionTable: React.FC<{
   })
 
   return (
-    <div className="card bg-base-100 shadow-xl border-2 border-base-300">
+    <div id={id} className="card bg-base-100 shadow-xl border-2 border-base-300 scroll-mt-20">
       <div className="card-body p-4">
         <h3 className="card-title font-bold text-center mb-2">{title}</h3>
         <p className="text-sm  text-base-content/70 mb-3">{subtitle}</p>
@@ -235,6 +265,12 @@ export const AdmissionTables: React.FC = () => {
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
+  // Create navigation data
+  const navigationPrograms = data?.universities.map((program, index) => ({
+    id: `program-${index}`,
+    title: program.data.programName,
+    subtitle: program.data.university
+  })) || [];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -258,10 +294,14 @@ export const AdmissionTables: React.FC = () => {
         </button>
       </div>
 
+      {/* Navigation Menu */}
+      <NavigationMenu programs={navigationPrograms} />
+
       <div className="">
         {data?.universities.map((program, index) => (
           <AdmissionTable
             key={index}
+            id={`program-${index}`}
             title={program.data.programName}
             subtitle={program.data.university}
             amounts={program.data.amounts}
