@@ -49,7 +49,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
     return (
       <div className="card bg-base-100 shadow-xl border-2 border-base-300">
         <div className="card-body p-4">
-          <h3 className="card-title font-bold text-center mb-2 text-lg">{program.data.programName}</h3>
+          <h3 className="card-title font-bold text-center mb-2 text-lg justify-center">{program.data.programName}</h3>
           <p className="text-sm text-base-content/70 text-center mb-3">{program.data.university}</p>
 
           <div className="text-center">
