@@ -1,6 +1,12 @@
+import dotenv from 'dotenv'
+
+dotenv.config({ path: '.env' })
+
+
 import express from 'express'
 import { osvitaParser } from '../scripts/websites/osvita/parser.js'
 import { queryPrograms } from './builder.js'
+
 
 const app = express()
 

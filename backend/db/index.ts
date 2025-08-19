@@ -1,12 +1,11 @@
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
-import { join } from 'path';
-import { fileURLToPath } from 'url';
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
+console.log(process.env);
+if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
 
 const client = createClient({
-  url: `file:${join(__dirname, '..', 'storage.db')}`,
+  url: process.env.DATABASE_URL,
 });
 
 export const db = drizzle(client);
