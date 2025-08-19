@@ -7,8 +7,6 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "module": "nodenext",

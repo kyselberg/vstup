@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { db } from '../db/index.ts';
-import { applicants, programs, universities } from '../db/schema.ts';
+import { db } from '../db/index.js';
+import { applicants, programs, universities } from '../db/schema.js';
 
 const schema = z.object({
     programs: z.object({
