@@ -165,6 +165,7 @@ const updateUniversities = async (data: ParsingResult[]) => {
             console.log(`University ${university.name} not found, inserting...`);
             await db.insert(universities).values(university);
         } else {
+            await db.update(universities).set(university).where(eq(universities.id, university.id));
             console.log(`University ${university.name} found, skipping...`);
         }
     }
@@ -174,6 +175,8 @@ const updatePrograms = async (data: ParsingResult[]) => {
     for (const item of data) {
         const program = {
             id: item.programId,
+            website: item.url,
+            url: item.url,
             name: item.data.programName,
             speciality_name: item.data.speciality,
             university_id: item.universityId,
@@ -181,7 +184,6 @@ const updatePrograms = async (data: ParsingResult[]) => {
             budget: item.data.amounts.budgetPlaces,
             contract: item.data.amounts.contractPlaces,
         };
-        console.log(program);
 
         const result = await db.select().from(programs).where(eq(programs.id, program.id)).limit(1);
 
@@ -189,6 +191,7 @@ const updatePrograms = async (data: ParsingResult[]) => {
             console.log(`Program ${program.name} not found, inserting...`);
             await db.insert(programs).values(program);
         } else {
+            await db.update(programs).set(program).where(eq(programs.id, program.id));
             console.log(`Program ${program.name} found, skipping...`);
         }
     }
