@@ -12,28 +12,26 @@ export const useUniversities = () => {
           const response = await fetch('/api/universities')
           const data = await response.json()
           const schema = z.object({
-            universities: z.object({
+            programs: z.object({
               id: z.string(),
               website: z.string(),
-              url: z.string().url(),
-              timestamp: z.string().datetime(),
-              data: z.object({
-                amounts: z.object({
-                  totalPlaces: z.string(),
-                  contractPlaces: z.string(),
-                  budgetPlaces: z.string()
-                }),
-                table: z.array(z.object({
-                  name: z.string(),
-                  priority: z.string(),
-                  state: z.string(),
-                  marks: z.string(),
-                  type: z.string()
-                })),
-                university: z.string(),
-                speciality: z.string(),
-                programName: z.string()
-              })
+              url: z.string(),
+              timestamp: z.string(),
+              university: z.string(),
+              speciality: z.string(),
+              programName: z.string(),
+              amounts: z.object({
+                totalPlaces: z.string(),
+                contractPlaces: z.string(),
+                budgetPlaces: z.string()
+              }),
+              table: z.array(z.object({
+                name: z.string(),
+                priority: z.string(),
+                state: z.string(),
+                marks: z.string(),
+                type: z.string()
+              })),
             }).array()
           })
 
@@ -41,11 +39,11 @@ export const useUniversities = () => {
           return parsedData;
         },
         select: (data) => {
-            return data.universities.map(university => ({
-                ...university,
+            return data.programs.map(program => ({
+                ...program,
                 data: {
-                    ...university.data,
-                    table: university.data.table.filter(row => row.state !== '').sort((a, b) => {
+                    ...program,
+                    table: program.table.filter(row => row.state !== '').sort((a, b) => {
                         // Sort budget applicants first, then contract applicants
                         if (a.type === 'Б' && b.type === 'К') return -1;
                         if (a.type === 'К' && b.type === 'Б') return 1;

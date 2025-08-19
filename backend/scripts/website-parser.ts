@@ -1,12 +1,11 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
 import puppeteer, { Browser, Page } from 'puppeteer';
-import { dataDirectoryPath, parsingResultsFileName } from '../utils/paths.js';
 
 export interface WebsiteConfig {
   id: string;
   name: string;
   url: string;
+  universityId: string;
+  programId: string;
   action?: (page: Page) => Promise<void>;
   callback: (page: Page) => Promise<Record<string, any>>;
   waitForSelector?: string;
@@ -18,6 +17,8 @@ export interface WebsiteConfig {
 
 export interface ParsingResult {
   id: string;
+  universityId: string;
+  programId: string;
   website: string;
   url: string;
   timestamp: Date;
@@ -64,6 +65,8 @@ export class WebsiteParser {
 
     const result: ParsingResult = {
       id: config.id,
+      universityId: config.universityId,
+      programId: config.programId,
       website: config.name,
       url: config.url,
       timestamp: new Date(),
@@ -145,6 +148,8 @@ export class WebsiteParser {
         console.error(`Failed to parse ${config.name}:`, error);
         results.push({
           id: config.id,
+          universityId: config.universityId,
+          programId: config.programId,
           website: config.name,
           url: config.url,
           timestamp: new Date(),
@@ -174,26 +179,6 @@ export class WebsiteParser {
         }, 100);
       });
     });
-  }
-
-  async saveResults(results: ParsingResult[], filename?: string): Promise<void> {
-    const outputDir = dataDirectoryPath || import.meta.url;
-    const outputPath = join(outputDir, filename || parsingResultsFileName);
-
-    writeFileSync(outputPath, JSON.stringify(results, null, 2));
-    console.log(`Results saved to: ${outputPath}`);
-  }
-
-  async loadResults(filename: string): Promise<ParsingResult[]> {
-    const outputDir = dataDirectoryPath || import.meta.url;
-    const filePath = join(outputDir, filename);
-
-    if (!existsSync(filePath)) {
-      throw new Error(`Results file not found: ${filePath}`);
-    }
-
-    const content = readFileSync(filePath, 'utf-8');
-    return JSON.parse(content);
   }
 }
 

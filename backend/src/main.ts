@@ -1,6 +1,6 @@
 import express from 'express'
 import { osvitaParser } from '../scripts/websites/osvita/parser.js'
-import { dataDirectoryPath, parsingResultsFileName } from '../utils/paths.js'
+import { queryPrograms } from './builder.js'
 
 const app = express()
 
@@ -11,10 +11,8 @@ app.get('/api', (req, res) => {
 })
 
 app.get('/api/universities', async (req, res) => {
-  const universities = await import(dataDirectoryPath + '/' + parsingResultsFileName, { with: { type: 'json' } });
-  res.json({
-    universities: universities.default,
-  })
+  const result = await queryPrograms();
+  res.json(result);
 })
 
 app.post('/api/get-unis', async (req, res) => {
@@ -36,6 +34,7 @@ app.post('/api/get-unis', async (req, res) => {
     });
   }
 });
+
 
 app.listen(8080, () => {
   console.log('Server is running on port 8080')
