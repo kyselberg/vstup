@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import puppeteer, { Browser, Page } from 'puppeteer';
-import { findParentDir } from '../utils/paths.js';
+import { dataDirectoryPath, parsingResultsFileName } from '../utils/paths.js';
 
 export interface WebsiteConfig {
   id: string;
@@ -177,16 +177,15 @@ export class WebsiteParser {
   }
 
   async saveResults(results: ParsingResult[], filename?: string): Promise<void> {
-    const defaultFilename = `parsing_results.json`;
-    const outputDir = findParentDir('data') || import.meta.url;
-    const outputPath = join(outputDir, filename || defaultFilename);
+    const outputDir = dataDirectoryPath || import.meta.url;
+    const outputPath = join(outputDir, filename || parsingResultsFileName);
 
     writeFileSync(outputPath, JSON.stringify(results, null, 2));
     console.log(`Results saved to: ${outputPath}`);
   }
 
   async loadResults(filename: string): Promise<ParsingResult[]> {
-    const outputDir = findParentDir('data') || import.meta.url;
+    const outputDir = dataDirectoryPath || import.meta.url;
     const filePath = join(outputDir, filename);
 
     if (!existsSync(filePath)) {

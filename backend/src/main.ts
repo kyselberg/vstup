@@ -1,6 +1,6 @@
 import express from 'express'
 import { osvitaParser } from '../scripts/websites/osvita/parser.js'
-import { findParentDir } from '../utils/paths.js'
+import { dataDirectoryPath, parsingResultsFileName } from '../utils/paths.js'
 
 const app = express()
 
@@ -11,9 +11,7 @@ app.get('/api', (req, res) => {
 })
 
 app.get('/api/universities', async (req, res) => {
-  const fileName = 'parsing_results.json'
-  const path = findParentDir('data')
-  const universities = await import(path + '/' + fileName, {with: {type: 'json'}});
+  const universities = await import(dataDirectoryPath + '/' + parsingResultsFileName, { with: { type: 'json' } });
   res.json({
     universities: universities.default,
   })

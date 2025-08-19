@@ -23,3 +23,7 @@ export function findParentDir(
 
   return null; // not found
 }
+
+
+export const parsingResultsFileName = 'parsing_results.json'
+export const dataDirectoryPath = findParentDir('data');
