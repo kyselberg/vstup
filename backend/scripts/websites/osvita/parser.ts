@@ -141,4 +141,5 @@ export const osvitaParser = async () => {
     await parser.initialize();
     const results = await parser.parseMultipleWebsites(osvitaConfigs);
     await parser.saveResults(results);
+    await parser.close();
 }
