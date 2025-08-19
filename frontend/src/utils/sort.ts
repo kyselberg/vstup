@@ -20,20 +20,36 @@ const filterByState = (row: { state: string }) => {
     return row.state !== '';
 }
 
+const filterAllowed = (row: { state: string }) => {
+    return row.state === "Допущено";
+}
+
+const filterAllButAllowed = (row: { state: string }) => {
+    return row.state !== "Допущено";
+}
+
 export const processTable = (program: ProgramsType['programs'][number]) => {
     const budgetPlacesAmount = parseInt(program.amounts.budgetPlaces);
 
     const students = program.table.filter(filterByState);
 
     const budgetStudents = students
+        .filter(filterAllowed)
         .toSorted(sortByType)
         .slice(0, budgetPlacesAmount);
 
     const contractStudents = students
+        .filter(filterAllowed)
         .toSorted(sortByType)
         .slice(budgetPlacesAmount)
         .toSorted(sortByState)
         .toSorted(sortByMarks);
 
-    return [...budgetStudents, ...contractStudents];
+    const allButAllowed = students
+        .filter(filterAllButAllowed)
+        .toSorted(sortByType)
+        .toSorted(sortByState)
+        .toSorted(sortByMarks);
+
+    return [...budgetStudents, ...contractStudents, ...allButAllowed];
 }
