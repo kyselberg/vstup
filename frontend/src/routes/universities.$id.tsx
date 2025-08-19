@@ -68,46 +68,18 @@ const columns = [
 ]
 
 const IndividualAdmissionTable: React.FC<{
-  title: string;
-  subtitle: string;
   amounts: { totalPlaces: string; contractPlaces: string; budgetPlaces: string };
   tableData: AdmissionData[];
-}> = ({ title, subtitle, amounts, tableData }) => {
+}> = ({ amounts, tableData }) => {
   const table = useReactTable({
-    data: tableData
-      .filter(row => row.state !== '')
-      .sort((a, b) => {
-        // Sort budget applicants first, then contract applicants
-        if (a.type === 'Б' && b.type === 'К') return -1;
-        if (a.type === 'К' && b.type === 'Б') return 1;
-        return 0;
-      }),
+    data: tableData,
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
 
   return (
     <div className="card bg-base-100 shadow-xl border-2 border-base-300">
-      <div className="card-body p-4">
-        <h3 className="card-title font-bold text-center mb-2">{title}</h3>
-        <p className="text-sm text-base-content/70 mb-3">{subtitle}</p>
-
-        {/* Amounts information */}
-        <div className="grid grid-cols-3 gap-2 mb-4 text-xs">
-          <div className="text-center">
-            <div className="font-semibold">Всього</div>
-            <div className="text-primary">{amounts.totalPlaces}</div>
-          </div>
-          <div className="text-center">
-            <div className="font-semibold">Бюджет</div>
-            <div className="text-success">{amounts.budgetPlaces}</div>
-          </div>
-          <div className="text-center">
-            <div className="font-semibold">Контракт</div>
-            <div className="text-warning">{amounts.contractPlaces}</div>
-          </div>
-        </div>
-
+      <div className="">
         <div className="overflow-x-auto">
           <table className="table table-xs w-full">
             <thead>
@@ -224,8 +196,6 @@ function RouteComponent() {
         </div>
 
         <IndividualAdmissionTable
-          title={university.data.programName}
-          subtitle={university.data.university}
           amounts={university.data.amounts}
           tableData={university.data.table}
         />
