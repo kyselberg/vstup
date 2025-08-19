@@ -5,6 +5,6 @@ export default defineConfig({
   out: './db/migrations',
   dialect: 'sqlite',
   dbCredentials: {
-    url: new URL('storage.db', import.meta.url).pathname,
+    url: "file:./storage.db",
   },
 });
