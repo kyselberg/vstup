@@ -28,6 +28,11 @@ const sites = [
         url: 'https://vstup.osvita.ua/y2025/r27/41/1436155/',
         id: '5',
     },
+    {
+        name: "Системний аналіз та наука про дані | Київський національний економічний університет імені Вадима Гетьмана",
+        url: "https://vstup.osvita.ua/y2025/r27/337/1451893/",
+        id: '6',
+    },
 ];
 
 const transformer = new OsvitaTransformer();
