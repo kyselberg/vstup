@@ -13,7 +13,7 @@ app.get('/api', (req, res) => {
 app.get('/api/universities', async (req, res) => {
   const fileName = 'parsing_results.json'
   const path = findParentDir('data')
-  const universities = await import(path + '/' + fileName);
+  const universities = await import(path + '/' + fileName, {with: {type: 'json'}});
   res.json({
     universities: universities.default,
   })
