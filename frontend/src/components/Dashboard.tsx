@@ -191,7 +191,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
 }
 
 export const Dashboard: React.FC = () => {
-  const { data, isLoading, error } = useUniversities()
+  const { data, error } = useUniversities()
   const updateMutation = useUpdateData();
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
@@ -200,7 +200,6 @@ export const Dashboard: React.FC = () => {
     updateMutation.mutate();
   }
 
-  if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
   // Count how many programs I'm within budget for
