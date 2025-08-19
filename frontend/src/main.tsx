@@ -12,6 +12,9 @@ import './index.css'
 // routes
 import { routeTree } from './routeTree.gen'
 
+// sse
+import './sse'
+
 // create router
 const router = createRouter({ routeTree, defaultPreload: 'intent', scrollRestoration: true, })
 

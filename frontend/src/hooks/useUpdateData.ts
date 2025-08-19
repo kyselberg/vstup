@@ -11,10 +11,6 @@ export const useUpdateData = () => {
           }
           return response.json()
         },
-        onSuccess: () => {
-          // Reload the page on success
-          window.location.reload()
-        },
         onError: (error) => {
           console.error('Update failed:', error)
           alert('Failed to update data. Please try again.')
