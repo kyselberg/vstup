@@ -2,11 +2,8 @@ import { Link } from '@tanstack/react-router'
 import React, { useState } from 'react'
 import { useUniversities } from '../hooks/useUniversities'
 import { useUpdateData } from '../hooks/useUpdateData'
+import { highlightMe } from '../utils/highlight'
 import { Countdown } from './Countdown'
-
-const highlightMe = (name: string) => {
-  return name === 'Кисельов І. О.';
-}
 
 // Define the data structure
 interface AdmissionData {
@@ -58,7 +55,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
           </div>
 
           <div className="mt-4 pt-4 border-t border-base-300">
-            <div className="grid grid-cols-3 gap-2 text-xs">
+            <div className="grid grid-cols-3 gap-2 text-xs mb-4">
               <div className="text-center">
                 <div className="font-semibold">Всього місць</div>
                 <div className="text-primary">{program.data.amounts.totalPlaces}</div>
@@ -72,6 +69,27 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
                 <div className="text-warning">{program.data.amounts.contractPlaces}</div>
               </div>
             </div>
+
+            {/* Additional Info */}
+            <div className="text-center text-xs text-base-content/70">
+              <div>Всього подавших: {totalApplicants}</div>
+              {isWithinBudget && (
+                <div className="text-success font-medium mt-1">
+                  Відставання від останнього бюджетного місця: {budgetPlacesCount - myPosition}
+                </div>
+              )}
+            </div>
+
+            {/* Action Button */}
+            <div className="card-actions justify-center mt-4">
+              <Link
+                to="/universities/$id"
+                params={{ id: program.id }}
+                className="btn btn-sm btn-outline"
+              >
+                Переглянути таблицю
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -79,25 +97,22 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
   }
 
   return (
-    <div className={`card shadow-xl border-2 transition-all hover:scale-105 ${
-      isWithinBudget
+    <div className={`card shadow-xl border-2 transition-all hover:scale-105 ${isWithinBudget
         ? 'bg-success/10 border-success/30 hover:bg-success/20'
         : 'bg-base-100 border-base-300 hover:bg-base-200'
-    }`}>
+      }`}>
       <div className="card-body p-4">
         <h3 className="card-title font-bold text-center mb-2 text-lg justify-center">{program.data.programName}</h3>
         <p className="text-sm text-base-content/70 text-center mb-3">{program.data.university}</p>
 
         {/* Position and Status */}
         <div className="text-center mb-4">
-          <div className={`text-4xl font-bold mb-2 ${
-            isWithinBudget ? 'text-success' : 'text-base-content'
-          }`}>
+          <div className={`text-4xl font-bold mb-2 ${isWithinBudget ? 'text-success' : 'text-base-content'
+            }`}>
             {myPosition}
           </div>
-          <div className={`text-sm font-medium ${
-            isWithinBudget ? 'text-success' : 'text-base-content/70'
-          }`}>
+          <div className={`text-sm font-medium ${isWithinBudget ? 'text-success' : 'text-base-content/70'
+            }`}>
             {isWithinBudget ? 'ПРОХОДИТЬ НА БЮДЖЕТ! 🎉' : 'Поза бюджетними місцями'}
           </div>
         </div>
@@ -111,21 +126,19 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
             </div>
             <div>
               <span className="font-semibold">Пріоритет:</span>
-              <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${
-                myData.priority === 'К'
+              <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${myData.priority === 'К'
                   ? 'bg-info/20 text-info border border-info/30'
                   : 'bg-base-300 text-base-content border border-base-300'
-              }`}>
+                }`}>
                 {myData.priority}
               </span>
             </div>
             <div>
               <span className="font-semibold">Тип:</span>
-              <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${
-                myData.type === 'Б'
+              <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${myData.type === 'Б'
                   ? 'bg-success/20 text-success border border-success/30'
                   : 'bg-warning/20 text-warning border border-warning/30'
-              }`}>
+                }`}>
                 {myData.type === 'Б' ? 'Бюджет' : 'Контракт'}
               </span>
             </div>
@@ -178,7 +191,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
 }
 
 export const Dashboard: React.FC = () => {
-  const {data, isLoading, error} = useUniversities()
+  const { data, isLoading, error } = useUniversities()
   const updateMutation = useUpdateData();
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
@@ -240,46 +253,46 @@ export const Dashboard: React.FC = () => {
         ))}
       </div>
 
-        {/* Quick Stats */}
-        <div className="text-center text-sm text-base-content/70 mt-4">
-          <p>Натисніть на картку програми для детального перегляду</p>
-        </div>
+      {/* Quick Stats */}
+      <div className="text-center text-sm text-base-content/70 mt-4">
+        <p>Натисніть на картку програми для детального перегляду</p>
+      </div>
 
-        {/* Refresh Data Button */}
-        <div className="text-center mt-8">
-          <button
-            onClick={handleUpdate}
-            disabled={updateMutation.isPending}
-            className="btn btn-outline btn-secondary"
-          >
-            {updateMutation.isPending ? (
-              <>
-                <span className="loading loading-spinner loading-sm"></span>
-                Оновлення...
-              </>
-            ) : (
-              '🔄 Оновити дані'
-            )}
-          </button>
-        </div>
+      {/* Refresh Data Button */}
+      <div className="text-center mt-8">
+        <button
+          onClick={handleUpdate}
+          disabled={updateMutation.isPending}
+          className="btn btn-outline btn-secondary"
+        >
+          {updateMutation.isPending ? (
+            <>
+              <span className="loading loading-spinner loading-sm"></span>
+              Оновлення...
+            </>
+          ) : (
+            '🔄 Оновити дані'
+          )}
+        </button>
+      </div>
 
-        {/* Update Modal */}
-        {showUpdateModal && (
-          <div className="modal modal-open">
-            <div className="modal-box text-center">
-              <div className="mb-6">
-                <span className="loading loading-spinner loading-lg text-primary"></span>
-              </div>
-              <h3 className="font-bold text-lg mb-4">Оновлення даних</h3>
-              <p className="text-base-content/70 mb-2">
-                Оновлення триває до хвилини.
-              </p>
-              <p className="text-base-content/70">
-                Сторінка оновиться автоматично, коли дані будуть готові.
-              </p>
+      {/* Update Modal */}
+      {showUpdateModal && (
+        <div className="modal modal-open">
+          <div className="modal-box text-center">
+            <div className="mb-6">
+              <span className="loading loading-spinner loading-lg text-primary"></span>
             </div>
+            <h3 className="font-bold text-lg mb-4">Оновлення даних</h3>
+            <p className="text-base-content/70 mb-2">
+              Оновлення триває до хвилини.
+            </p>
+            <p className="text-base-content/70">
+              Сторінка оновиться автоматично, коли дані будуть готові.
+            </p>
           </div>
-        )}
+        </div>
+      )}
     </div>
   )
 }

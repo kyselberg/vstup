@@ -6,11 +6,8 @@ import {
 } from '@tanstack/react-table'
 import React from 'react'
 import { useUniversities } from '../hooks/useUniversities'
+import { highlightMe } from '../utils/highlight'
 import { Countdown } from './Countdown'
-
-const highlightMe = (name: string) => {
-  return name === 'Кисельов І. О.';
-}
 
 // Define the data structure
 interface AdmissionData {

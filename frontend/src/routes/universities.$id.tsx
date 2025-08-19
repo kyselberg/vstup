@@ -3,10 +3,7 @@ import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '
 import React from 'react'
 import { Countdown } from '../components/Countdown'
 import { useUniversity } from '../hooks/useUniversity'
-
-const highlightMe = (name: string) => {
-  return name === 'Кисельов І. О.';
-}
+import { highlightMe } from '../utils/highlight'
 
 // Define the data structure
 interface AdmissionData {
