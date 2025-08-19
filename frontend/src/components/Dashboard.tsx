@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { useUniversities } from '../hooks/useUniversities'
 import { useUpdateData } from '../hooks/useUpdateData'
 import { highlightMe } from '../utils/highlight'
-import { Countdown } from './Countdown'
 
 // Define the data structure
 interface AdmissionData {
@@ -213,8 +212,8 @@ export const Dashboard: React.FC = () => {
   const totalPrograms = data?.length || 0
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="">
+          <div className="container mx-auto px-4 py-8">
+        <div className="">
         <h1 className="text-3xl font-bold text-base-content text-center mb-4">
           Моя панель вступу 2025
         </h1>
@@ -240,10 +239,6 @@ export const Dashboard: React.FC = () => {
             <div className="stat-value text-warning">{totalPrograms - budgetProgramsCount}</div>
           </div>
         </div>
-      </div>
-
-      <div className="mb-8">
-        <Countdown />
       </div>
 
       {/* Dashboard Cards */}

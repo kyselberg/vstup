@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import React from 'react'
-import { Countdown } from '../components/Countdown'
 import { useUniversity } from '../hooks/useUniversity'
 import { highlightMe } from '../utils/highlight'
 
@@ -183,7 +182,7 @@ function RouteComponent() {
     )
   }
 
-  return (
+    return (
     <div className="min-h-screen bg-base-200">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
@@ -222,10 +221,6 @@ function RouteComponent() {
           <p className="text-lg text-base-content/70 mt-2">
             {university.data.university}
           </p>
-        </div>
-
-        <div className="mb-8">
-          <Countdown />
         </div>
 
         <IndividualAdmissionTable

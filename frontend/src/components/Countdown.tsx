@@ -9,51 +9,51 @@ export const Countdown = () => {
 
   if (remainingTime <= 0) {
     return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
-          <div className="text-2xl font-bold text-red-600">Час подачі завершено</div>
+      <div className="flex justify-center items-center">
+        <div className="card bg-base-100 shadow-xl border-2 border-base-300 p-3">
+          <div className="text-sm font-bold text-error text-center">Час подачі завершено</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center min-h-[200px]">
-      <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200">
+    <div className="flex justify-center items-center">
+      <div className="card bg-base-100 shadow-xl border-2 border-base-300 p-3">
         <div className="text-center">
-          <div className="text-xl font-semibold text-gray-700 mb-6">Дедлайн подачі</div>
-          <div className="grid grid-flow-col gap-8 text-center auto-cols-max">
+          <div className="text-xs font-semibold text-base-content mb-2">Дедлайн подачі</div>
+          <div className="grid grid-flow-col gap-2 text-center auto-cols-max">
             <div className="flex flex-col items-center">
-              <span className="countdown font-mono text-6xl text-blue-600">
+              <span className="countdown font-mono text-lg text-primary">
                 <span style={{"--value": days} as React.CSSProperties} aria-live="polite" aria-label={`${days} днів`}>
                   {days}
                 </span>
               </span>
-              <span className="text-sm font-medium text-gray-600 mt-2">днів</span>
+              <span className="text-xs font-medium text-base-content/70">д</span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="countdown font-mono text-6xl text-green-600">
+              <span className="countdown font-mono text-lg text-success">
                 <span style={{"--value": hours} as React.CSSProperties} aria-live="polite" aria-label={`${hours} годин`}>
                   {hours}
                 </span>
               </span>
-              <span className="text-sm font-medium text-gray-600 mt-2">годин</span>
+              <span className="text-xs font-medium text-base-content/70">г</span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="countdown font-mono text-6xl text-orange-600">
+              <span className="countdown font-mono text-lg text-warning">
                 <span style={{"--value": minutes} as React.CSSProperties} aria-live="polite" aria-label={`${minutes} хвилин`}>
                   {minutes}
                 </span>
               </span>
-              <span className="text-sm font-medium text-gray-600 mt-2">хв</span>
+              <span className="text-xs font-medium text-base-content/70">х</span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="countdown font-mono text-6xl text-red-600">
+              <span className="countdown font-mono text-lg text-error">
                 <span style={{"--value": seconds} as React.CSSProperties} aria-live="polite" aria-label={`${seconds} секунд`}>
                   {seconds}
                 </span>
               </span>
-              <span className="text-sm font-medium text-gray-600 mt-2">сек</span>
+              <span className="text-xs font-medium text-base-content/70">с</span>
             </div>
           </div>
         </div>
