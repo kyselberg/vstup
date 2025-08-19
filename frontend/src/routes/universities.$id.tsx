@@ -104,17 +104,41 @@ const IndividualAdmissionTable: React.FC<{
                 const isBudget = row.getValue('type') === 'Б';
                 const budgetPlacesCount = parseInt(amounts.budgetPlaces) || 0;
                 const isWithinBudgetPlaces = isBudget && (row.index + 1) <= budgetPlacesCount;
+                const contractPlacesCount = parseInt(amounts.contractPlaces) || 0;
+                const isWithinContractPlaces = (row.index + 1) > budgetPlacesCount && (row.index + 1) <= (budgetPlacesCount + contractPlacesCount);
+
+                const bg = `${
+                      isHighlighted
+                        ? 'bg-primary/10 hover:bg-primary/20'
+                        : isWithinBudgetPlaces
+                        ? 'bg-success/10 hover:bg-success/20'
+                        : isWithinContractPlaces
+                        ? 'bg-warning/10 hover:bg-warning/20'
+                        : 'hover:bg-base-200'
+                    }`
+
+                  const border = `${
+                      isWithinBudgetPlaces
+                        ? 'border-l-success'
+                        : isWithinContractPlaces
+                        ? 'border-l-warning'
+                        : ''
+                    }`
+
+                    const borderWidth = `${
+                      isHighlighted
+                        ? 'border-l-6'
+                        : isWithinBudgetPlaces
+                        ? 'border-l-2'
+                        : isWithinContractPlaces
+                        ? 'border-l-2'
+                        : ''
+                    }`
 
                 return (
                   <tr
                     key={row.id}
-                    className={`${
-                      isHighlighted
-                        ? 'bg-primary/10 border-l-4 border-l-primary hover:bg-primary/20'
-                        : isWithinBudgetPlaces
-                        ? 'bg-success/10 border-l-2 border-l-success hover:bg-success/20'
-                        : 'hover:bg-base-200'
-                    }`}
+                    className={bg + ' ' + border + ' ' + borderWidth}
                   >
                     {row.getVisibleCells().map(cell => (
                       <td key={cell.id} className="text-center px-2 py-1 text-xs">
