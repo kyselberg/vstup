@@ -10,6 +10,9 @@ export const getMe = (name: string): boolean => {
     programId: string,
     university: string,
     universityId: string,
+    budgetPlaces: string,
+    position: number,
+    priority: string,
   }[]
 
 export const applicantsDetails = async (programId: string): Promise<Record<string, ReturnType>> => {
@@ -36,6 +39,8 @@ export const applicantsDetails = async (programId: string): Promise<Record<strin
         programId: string,
         university: string,
         universityId: string,
+        budgetPlaces: string,
+        position: number,
         applicant: {
             name: string;
             priority: string;
@@ -49,18 +54,21 @@ export const applicantsDetails = async (programId: string): Promise<Record<strin
         const budgetApplicants = program.table.slice(0, parseInt(program.amounts.budgetPlaces))
 
         const applicants = budgetApplicants
+            .map((item, idx) => ({...item, position: idx + 1}))
             .filter(applicant =>
                 selectedProgramApplicants.includes(applicant.name)
                 && (Number(applicant.priority) < Number(selectedApplicantsPriorities[applicant.name]))
             );
 
-        return applicants.map(applicant => {
+        return applicants.map((applicant) => {
             return {
                 program: program.programName,
                 programId: program.id,
                 universityId: program.universityId,
                 university: program.university,
-                applicant
+                applicant,
+                budgetPlaces: program.amounts.budgetPlaces,
+                position: applicant.position
             }
         });
     });
@@ -72,6 +80,9 @@ export const applicantsDetails = async (programId: string): Promise<Record<strin
             programId: curr.programId,
             university: curr.university,
             universityId: curr.universityId,
+            budgetPlaces: curr.budgetPlaces,
+            position: curr.position,
+            priority: curr.applicant.priority,
         });
         return acc;
     } , {} as Record<string, ReturnType>);

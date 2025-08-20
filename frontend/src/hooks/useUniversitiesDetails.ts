@@ -15,6 +15,9 @@ const schema = z.record(z.string(), z.array(z.object({
     university: z.string(),
     programId: z.string(),
     universityId: z.string(),
+    budgetPlaces: z.string(),
+    position: z.number(),
+    priority: z.string(),
 })));
 
 export const useUniversitiesDetails = (programId: string) => {

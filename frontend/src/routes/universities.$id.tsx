@@ -15,14 +15,14 @@ interface AdmissionData {
 }
 
 type TableDataType = AdmissionData & {
-  otherBudgetPrograms: {university: string, program: string; universityId: string, programId: string; }[];
+  otherBudgetPrograms: {university: string, program: string; universityId: string, programId: string; place?: number; budgetPlaces?: string; priority?: string; }[];
 };
 
 // Modal component for showing other budget programs
 const OtherProgramsModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
-  programs: {university: string, program: string; universityId: string, programId: string; }[];
+  programs: {university: string, program: string; universityId: string, programId: string; place?: number; budgetPlaces?: string; priority?: string; }[];
   personName: string;
 }> = ({ isOpen, onClose, programs, personName }) => {
 
@@ -48,6 +48,35 @@ const OtherProgramsModal: React.FC<{
             <div key={index} className="p-3 bg-gray-100 rounded-lg">
               <div className="font-medium text-gray-900">{program.program}</div>
               <div className="text-sm text-gray-600 mb-2">{program.university}</div>
+
+              {/* Additional information row */}
+              <div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
+                {program.place && (
+                  <div className="flex items-center gap-1">
+                    <span className="font-medium">Місце:</span>
+                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                      {program.place}
+                    </span>
+                  </div>
+                )}
+                {program.budgetPlaces && (
+                  <div className="flex items-center gap-1">
+                    <span className="font-medium">Бюджетних місць:</span>
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                      {program.budgetPlaces}
+                    </span>
+                  </div>
+                )}
+                {program.priority && (
+                  <div className="flex items-center gap-1">
+                    <span className="font-medium">Пріоритет:</span>
+                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                      {program.priority}
+                    </span>
+                  </div>
+                )}
+              </div>
+
               <Link
                 to="/universities/$id"
                 params={{ id: program.programId }}
@@ -82,7 +111,7 @@ const IndividualAdmissionTable: React.FC<{
 }> = ({ amounts, tableData }) => {
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
-    programs: {university: string, program: string; universityId: string, programId: string; }[];
+    programs: {university: string, program: string; universityId: string, programId: string; place?: number; budgetPlaces?: string; priority?: string; }[];
     personName: string;
   }>({
     isOpen: false,
@@ -90,7 +119,7 @@ const IndividualAdmissionTable: React.FC<{
     personName: ''
   });
 
-  const handleNameClick = (programs: {university: string, program: string; universityId: string, programId: string; }[], personName: string) => {
+  const handleNameClick = (programs: {university: string, program: string; universityId: string, programId: string; place?: number; budgetPlaces?: string; priority?: string; }[], personName: string) => {
     setModalState({
       isOpen: true,
       programs,
@@ -284,7 +313,20 @@ function RouteComponent() {
   const {data: details = {}} = useUniversitiesDetails(id);
 
   const tableData = useMemo<TableDataType[]>(() => {
-    const result = university?.data.table.map(data => ({...data, otherBudgetPrograms: details[data.name] ?? []})) ?? [];
+    const result = university?.data.table.map(data => {
+      const otherPrograms = details[data.name] ?? [];
+      const transformedPrograms = otherPrograms.map(program => ({
+        university: program.university,
+        program: program.program,
+        universityId: program.universityId,
+        programId: program.programId,
+        place: program.position,
+        budgetPlaces: program.budgetPlaces,
+        priority: program.priority
+      }));
+
+      return {...data, otherBudgetPrograms: transformedPrograms};
+    }) ?? [];
     return result;
   }, [university, details]);
 
