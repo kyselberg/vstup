@@ -3,6 +3,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 import { osvitaParser } from '../scripts/websites/osvita/parser.js';
+import { applicantsDetails } from './applicatsDetails.js';
 import { queryPrograms } from './builder.js';
 
 const activeConnections: express.Response[] = [];
@@ -13,18 +14,25 @@ app.use(cors({
   origin: ['https://uni.youwillmiss.dev'],
 }))
 
-app.get('/api', (req, res) => {
+const router = express.Router();
+
+router.get('/', (req, res) => {
   res.json({
     message: 'Hello World',
   })
 })
 
-app.get('/api/universities', async (req, res) => {
+router.get('/universities', async (req, res) => {
   const result = await queryPrograms();
   res.json(result);
 })
 
-app.post('/api/get-unis', async (req, res) => {
+router.get('/universities/:id', async (req, res) => {
+  const result = await applicantsDetails(req.params.id);
+  res.json(result);
+})
+
+router.post('/get-unis', async (req, res) => {
   try {
     console.log('Starting refetch process...');
 
@@ -77,7 +85,7 @@ app.post('/api/get-unis', async (req, res) => {
   }
 });
 
-app.get('/api/events', async (req, res) => {
+router.get('/events', async (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
@@ -110,6 +118,8 @@ app.get('/api/events', async (req, res) => {
     }
   })
 })
+
+app.use('/api', router);
 
 
 app.listen(8080, () => {

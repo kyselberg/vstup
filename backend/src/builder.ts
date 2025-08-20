@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '../db/index.js';
 import { applicants, programs, universities } from '../db/schema.js';
+import { processTable } from '../utils/sort.js';
 
 const schema = z.object({
     programs: z.object({
@@ -28,7 +29,7 @@ const schema = z.object({
   });
 
 
-type ParsedResult = z.infer<typeof schema>;
+export type ProgramsType = z.infer<typeof schema>;
 
 export const queryPrograms = async () => {
     const rawPrograms = await db.select().from(programs);
@@ -40,32 +41,39 @@ export const queryPrograms = async () => {
 
     const programIds = rawPrograms.map(program => program.id);
 
-    const res: ParsedResult['programs'] = programIds.map((programId) => {
+    const res: ProgramsType['programs'] = programIds.map((programId) => {
         const program = rawPrograms.find(program => program.id === programId);
-        const result = rawResults.find(result => result.programs?.id === programId);
-        return {
+
+        const all = rawResults.find(result => result.programs?.id === programId);
+
+        const table = rawResults.filter(result => result.programs?.id === programId).map(result => ({
+            name: result.applicants?.name || '',
+            priority: result.applicants?.priority || '',
+            state: result.applicants?.status || '',
+            marks: result.applicants?.mark?.toString() || '',
+            type: result.applicants?.type || '',
+        }));
+
+        const result = {
             id: programId,
             website: program?.website || '',
             url: program?.website || '',
             timestamp: new Date().toISOString(),
-            university: result?.universities?.name || '',
+            university: all?.universities?.name || '',
             speciality: program?.speciality_name || '',
             programName: program?.name || '',
             amounts: {
-                totalPlaces: result?.programs?.total?.toString() || '0',
-                contractPlaces: result?.programs?.contract?.toString() || '0',
-                budgetPlaces: result?.programs?.budget?.toString() || '0'
+                totalPlaces: all?.programs?.total?.toString() || '0',
+                contractPlaces: all?.programs?.contract?.toString() || '0',
+                budgetPlaces: all?.programs?.budget?.toString() || '0'
             },
-            table: rawResults.filter(result => result.programs?.id === programId).map(result => {
-                return {
-                    name: result.applicants?.name || '',
-                    priority: result.applicants?.priority || '',
-                    state: result.applicants?.status || '',
-                    marks: result.applicants?.mark?.toString() || '',
-                    type: result.applicants?.type || '',
-                }
-            }),
+            table: table as ProgramsType['programs'][number]['table'],
         }
+
+        return {
+            ...result,
+            table: processTable(result),
+        };
     });
     return {
         programs: res

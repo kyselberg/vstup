@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import React from 'react'
+import React, { useMemo } from 'react'
+import { useUniversitiesDetails } from '../hooks/useUniversitiesDetails'
 import { useUniversity } from '../hooks/useUniversity'
 import { highlightMe } from '../utils/highlight'
 
@@ -13,7 +14,9 @@ interface AdmissionData {
   type: string
 }
 
-const columnHelper = createColumnHelper<AdmissionData>()
+type TableDataType = AdmissionData & {otherBudgetPrograms: {university: string, program: string}[]};
+
+const columnHelper = createColumnHelper<TableDataType>()
 
 const columns = [
   columnHelper.display({
@@ -23,7 +26,18 @@ const columns = [
   }),
   columnHelper.accessor('name', {
     header: 'ПІБ',
-    cell: info => info.getValue(),
+    cell: info => (
+      <div className="flex items-center gap-1">
+        <span>{info.getValue()}</span>
+        {info.row.original.otherBudgetPrograms.length > 0 && (
+          <div className="tooltip tooltip-bottom" data-tip={`Проходить на бюджет в іншій програмі: ${info.row.original.otherBudgetPrograms.map(p => p.program).join(' • ')}`}>
+            <svg className="w-4 h-4 text-info cursor-help" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+          </div>
+        )}
+      </div>
+    ),
   }),
   columnHelper.accessor('marks', {
     header: 'Бал',
@@ -69,7 +83,7 @@ const columns = [
 
 const IndividualAdmissionTable: React.FC<{
   amounts: { totalPlaces: string; contractPlaces: string; budgetPlaces: string };
-  tableData: AdmissionData[];
+  tableData: TableDataType[];
 }> = ({ amounts, tableData }) => {
   const table = useReactTable({
     data: tableData,
@@ -164,6 +178,13 @@ function RouteComponent() {
   const { id } = Route.useParams();
 
   const { university, isLoading, error } = useUniversity(id)
+  const {data: details = {}} = useUniversitiesDetails(id);
+
+  const tableData = useMemo<TableDataType[]>(() => {
+    return university?.data.table.map(data => ({...data, otherBudgetPrograms: details[data.name] ?? []})) ?? [];
+  }, [university, details]);
+
+
   if (isLoading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
 
@@ -221,7 +242,7 @@ function RouteComponent() {
 
         <IndividualAdmissionTable
           amounts={university.data.amounts}
-          tableData={university.data.table}
+          tableData={tableData}
         />
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { programsSchema } from "../schemas/programs";
-import { processTable } from "../utils/sort";
 
 export const useUniversities = () => {
     return useQuery({
@@ -21,7 +20,6 @@ export const useUniversities = () => {
                 ...program,
                 data: {
                     ...program,
-                    table: processTable(program),
                 }
             }))
         }
