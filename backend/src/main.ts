@@ -69,6 +69,18 @@ router.post('/get-unis', async (req, res) => {
           console.error('Error sending SSE to connection:', error);
         }
       });
+
+      activeConnections.forEach(connection => {
+        try {
+          connection.write(`data: ${JSON.stringify({
+            type: 'update',
+            message: 'Universities data refreshed partially',
+            timestamp: new Date().toISOString()
+          })}\n\n`);
+        } catch (error) {
+          console.error('Error sending SSE to connection:', error);
+        }
+      });
     });
 
     res.json({
