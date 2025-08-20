@@ -22,7 +22,8 @@ interface DashboardCardProps {
       amounts: {
         totalPlaces: string
         contractPlaces: string
-        budgetPlaces: string
+        budgetPlaces: string,
+        licensePlaces: string,
       }
       table: AdmissionData[]
     }
@@ -57,7 +58,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
             <div className="grid grid-cols-3 gap-2 text-xs mb-4">
               <div className="text-center">
                 <div className="font-semibold">Всього місць</div>
-                <div className="text-primary">{program.data.amounts.totalPlaces}</div>
+                <div className="text-primary">{program.data.amounts.licensePlaces}</div>
               </div>
               <div className="text-center">
                 <div className="font-semibold">Бюджет</div>
@@ -152,7 +153,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({ program }) => {
         <div className="grid grid-cols-3 gap-2 text-xs mb-4">
           <div className="text-center">
             <div className="font-semibold">Всього місць</div>
-            <div className="text-primary">{program.data.amounts.totalPlaces}</div>
+            <div className="text-primary">{program.data.amounts.licensePlaces}</div>
           </div>
           <div className="text-center">
             <div className="font-semibold">Бюджет</div>

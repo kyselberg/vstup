@@ -17,7 +17,8 @@ const schema = z.object({
       amounts: z.object({
         totalPlaces: z.string(),
         contractPlaces: z.string(),
-        budgetPlaces: z.string()
+        budgetPlaces: z.string(),
+        licensePlaces: z.string(),
       }),
       table: z.array(z.object({
         name: z.string(),
@@ -67,7 +68,8 @@ export const queryPrograms = async () => {
             amounts: {
                 totalPlaces: all?.programs?.total?.toString() || '0',
                 contractPlaces: all?.programs?.contract?.toString() || '0',
-                budgetPlaces: all?.programs?.budget?.toString() || '0'
+                budgetPlaces: all?.programs?.budget?.toString() || '0',
+                licensePlaces: all?.programs?.license?.toString() || '0'
             },
             table: table as ProgramsType['programs'][number]['table'],
         }

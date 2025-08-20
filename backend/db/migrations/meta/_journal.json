@@ -8,6 +8,13 @@
       "when": 1755608055516,
       "tag": "0000_daffy_centennial",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1755726097613,
+      "tag": "0001_military_shockwave",
+      "breakpoints": true
     }
   ]
 }

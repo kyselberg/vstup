@@ -11,6 +11,7 @@ export const programs = sqliteTable('programs', {
   speciality_name: text('speciality_name').notNull(),
   university_id: text('university_id').references(() => universities.id),
   total: integer('total'),
+  license: integer('license'),
   budget: integer('budget'),
   contract: integer('contract'),
   website: text('website'),

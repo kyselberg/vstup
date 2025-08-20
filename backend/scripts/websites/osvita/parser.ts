@@ -301,6 +301,7 @@ const updatePrograms = async (data: ParsingResult[]) => {
             university_id: item.universityId,
             total: item.data.amounts.totalPlaces,
             budget: item.data.amounts.budgetPlaces,
+            license: item.data.amounts.licensePlaces,
             contract: item.data.amounts.contractPlaces,
         };
 
@@ -311,7 +312,7 @@ const updatePrograms = async (data: ParsingResult[]) => {
             await db.insert(programs).values(program);
         } else {
             await db.update(programs).set(program).where(eq(programs.id, program.id));
-            console.log(`Program ${program.name} found, skipping...`);
+            console.log(`Program ${program.name} updated successfully`);
         }
     }
 }

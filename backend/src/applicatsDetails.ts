@@ -11,6 +11,7 @@ export const getMe = (name: string): boolean => {
     university: string,
     universityId: string,
     budgetPlaces: string,
+    licensePlaces: string,
     position: number,
     priority: string,
   }[]
@@ -40,6 +41,7 @@ export const applicantsDetails = async (programId: string): Promise<Record<strin
         university: string,
         universityId: string,
         budgetPlaces: string,
+        licensePlaces: string;
         position: number,
         applicant: {
             name: string;
@@ -68,6 +70,7 @@ export const applicantsDetails = async (programId: string): Promise<Record<strin
                 university: program.university,
                 applicant,
                 budgetPlaces: program.amounts.budgetPlaces,
+                licensePlaces: program.amounts.licensePlaces,
                 position: applicant.position
             }
         });
@@ -81,6 +84,7 @@ export const applicantsDetails = async (programId: string): Promise<Record<strin
             university: curr.university,
             universityId: curr.universityId,
             budgetPlaces: curr.budgetPlaces,
+            licensePlaces: curr.licensePlaces,
             position: curr.position,
             priority: curr.applicant.priority,
         });
