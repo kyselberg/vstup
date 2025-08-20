@@ -51,7 +51,7 @@ const columns = [
       return (
         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
           isContract
-            ? 'bg-info/20 text-info border border-info/30'
+            ? 'bg-warning/20 text-warning border border-warning/30'
             : 'bg-base-200 text-base-content border border-base-300'
         }`}>
           {priority}
