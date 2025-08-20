@@ -7,7 +7,9 @@ export const getMe = (name: string): boolean => {
 
   type ReturnType = {
     program: string,
+    programId: string,
     university: string,
+    universityId: string,
   }[]
 
 export const applicantsDetails = async (programId: string): Promise<Record<string, ReturnType>> => {
@@ -31,7 +33,9 @@ export const applicantsDetails = async (programId: string): Promise<Record<strin
 
     type ApplicantsType = {
         program: string,
+        programId: string,
         university: string,
+        universityId: string,
         applicant: {
             name: string;
             priority: string;
@@ -53,6 +57,8 @@ export const applicantsDetails = async (programId: string): Promise<Record<strin
         return applicants.map(applicant => {
             return {
                 program: program.programName,
+                programId: program.id,
+                universityId: program.universityId,
                 university: program.university,
                 applicant
             }
@@ -63,7 +69,9 @@ export const applicantsDetails = async (programId: string): Promise<Record<strin
         acc[curr.applicant.name] ??= [];
         acc[curr.applicant.name]?.push({
             program: curr.program,
+            programId: curr.programId,
             university: curr.university,
+            universityId: curr.universityId,
         });
         return acc;
     } , {} as Record<string, ReturnType>);

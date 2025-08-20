@@ -11,6 +11,7 @@ const schema = z.object({
       url: z.string(),
       timestamp: z.string(),
       university: z.string(),
+      universityId: z.string(),
       speciality: z.string(),
       programName: z.string(),
       amounts: z.object({
@@ -59,6 +60,7 @@ export const queryPrograms = async () => {
             website: program?.website || '',
             url: program?.website || '',
             timestamp: new Date().toISOString(),
+            universityId: all?.universities.id ?? '',
             university: all?.universities?.name || '',
             speciality: program?.speciality_name || '',
             programName: program?.name || '',

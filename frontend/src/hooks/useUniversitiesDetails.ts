@@ -13,6 +13,8 @@ import z from "zod";
 const schema = z.record(z.string(), z.array(z.object({
     program: z.string(),
     university: z.string(),
+    programId: z.string(),
+    universityId: z.string(),
 })));
 
 export const useUniversitiesDetails = (programId: string) => {
