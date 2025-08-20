@@ -1,5 +1,6 @@
 import 'dotenv/config';
 
+import cors from 'cors';
 import express from 'express';
 import { osvitaParser } from '../scripts/websites/osvita/parser.js';
 import { queryPrograms } from './builder.js';
@@ -7,6 +8,10 @@ import { queryPrograms } from './builder.js';
 const activeConnections: express.Response[] = [];
 
 const app = express()
+
+app.use(cors({
+  origin: ['https://uni.youwillmiss.dev'],
+}))
 
 app.get('/api', (req, res) => {
   res.json({
