@@ -94,7 +94,7 @@ const IndividualAdmissionTable: React.FC<{
   return (
     <div className="card bg-base-100 shadow-xl border-2 border-base-300">
       <div className="">
-        <div className="overflow-x-auto">
+        <div className="">
           <table className="table table-xs w-full">
             <thead>
               {table.getHeaderGroups().map(headerGroup => (
